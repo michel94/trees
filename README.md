@@ -1,5 +1,7 @@
-avltree
-=======
+Trees
+=====
 
-My own AVL Tree.
-It is supposed to be able to used like STL Map.
+Some Trees implemented by me.
+Currently, just an AVL Tree
+
+Programmed in C++. The trees are supposed to be used like a STL Map.
