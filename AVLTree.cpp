@@ -8,6 +8,8 @@
 
 using namespace std;
 
+string tabs;
+
 template <class Key, class Value > 
 class Node{
 	public:
@@ -59,13 +61,17 @@ class Tree{
 		Node<Key, Value>* find(Key);
 		void remove(Key);
 		Node<Key, Value>* left(Node<Key, Value>* n);
-		void print();
-		void printAux(Node<Key, Value>* n);
+		void print() const;
+		void printAux(Node<Key, Value>* n, int h) const;
 		void printbfs();
 		Value& operator [] (Key k);
+		//template< Tree<Key, Value> temp >
+		//friend ostream& operator<< (ostream & out, const Tree<Key, Value>& t);
+
 	private:
 		void removeByRef(Node<Key, Value>* n);
 		Node<Key, Value>* tree;
+		
 		
 };
 
@@ -272,7 +278,7 @@ Node<Key, Value>* Tree<Key, Value>::insert(Key k, Value v){
 
 template <class Key, class Value>
 Value& Tree<Key, Value>::operator[](Key k){
-	Value v = 0;
+	Value v = *(new Value());
 	return insert(k, v)->value;
 }
 
@@ -432,20 +438,42 @@ void Tree<Key, Value>::removeByRef(Node<Key, Value>* n){
 }
 
 template <class Key, class Value>
-void Tree<Key, Value>::printAux(Node<Key, Value>* n){
+void Tree<Key, Value>::printAux(Node<Key, Value>* n, int h) const{
 	if(n == NULL)
 		return;
-	printAux(n->left);
-	if(n->value != 0)
-		cout << n->key << ": " << n->value << endl;
-	printAux(n->right);
+
+	tabs += '\t';
+
+	printAux(n->left, h+1);
+	//if(n->value != 0)
+	
+	if(tabs.size())
+		tabs.resize (tabs.size() - 1);
+
+	cout << tabs << n->key << ": ";
+	tabs += '\t';
+	cout << n->value << endl;
+	
+
+	printAux(n->right, h+1);
+
+
+	tabs.resize (tabs.size () - 1);
 }
 
 template <class Key, class Value>
-void Tree<Key, Value>::print(){
-	printAux(tree->left);
+void Tree<Key, Value>::print() const{
+	putchar('\n');
+	printAux(tree->left, 0);
 }
 
+template <class Key, class Value>
+ostream& operator<< (ostream & out, const Tree<Key, Value>& t){
+	t.print();
+	return out;
+}
+
+/*
 template <class Key, class Value>
 void Tree<Key, Value>::printbfs(){
 	queue< Node<string, int> > q;
@@ -467,35 +495,28 @@ void Tree<Key, Value>::printbfs(){
 		q.pop();
 		
 	}
-}
-
-template <class Key, class Value>
-void printbfs(Node<Key, Value>* tree){
-	queue< Node<string, int> > q;
-	q.push(*tree);
-	while(!q.empty()){
-		Node<Key, Value> n = q.front();
-		printNode(&n);
-		printf("(");
-			printNode(n.left);
-			printNode(n.right);
-		printf(") - ");
-		printf("%d\n", n.height);
-		if(n.left != NULL){
-			q.push(*(n.left));
-		}
-		if(n.right != NULL){
-			q.push(*(n.right));
-		}
-		q.pop();
-		
-	}
-}
+}*/
 
 int main(){
-	Tree<string, int> tree;
-	
-	char rd[50];
+
+	Tree<string, Tree<string, int> > tree;
+	tree["ze"]["couve"] = 4;
+	tree["ze"]["alface"] = 9;
+	tree["ze"]["pepino"] = 2;
+	tree["ze"]["tomate"] = 6;
+	tree["ze"]["batata"] = 1;
+	tree["ze"]["cenoura"] = 5;
+
+	tree["michel"]["couve"] = 47;
+	tree["michel"]["alface"] = 92;
+	tree["michel"]["pepino"] = 26;
+	tree["michel"]["tomate"] = 63;
+	tree["michel"]["batata"] = 13;
+	tree["michel"]["cenoura"] = 51;
+	//cout << tree["nabo"]["couve"] << endl;
+	//tree.print();
+	cout << tree << endl;
+	/*char rd[50];
 	while(scanf("%s", rd) != EOF){
 		string s (rd);
 		if(s == "REMOVE"){
@@ -508,7 +529,7 @@ int main(){
 			tree[s]++;
 		}
 	}
-	tree.print();
+	tree.print();*/
 	
 	return 0;
 }
